@@ -38,34 +38,21 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
+    let letter = '';
+    strLength = expr.length / 10;
+    s = '';
+    let arr = [];
 
-    exprArr = expr.split('');
-
-    function getKeyByValue(obj, value) {
-        return Object.keys(obj).find(key => obj[key] === value);
+    for (let i = 0; i < strLength; i++) {
+        letter = expr.substr(-10);
+        arr.push(letter);
+        expr = expr.slice(0, -10);
     }
 
-    exprArr = exprArr.map(value => getKeyByValue(MORSE_TABLE, value));
+    arr = arr.map(x => x.match(/.{1,2}/g).map(x => x == '10' ? x = '.' : x == '11' ? x = '-' : x = '').join(''));
 
-    for (let i = 0; i < exprArr.length; i++) {
-        if (exprArr[i] === undefined) {
-            exprArr[i] = '*';
-        }
-    }
-
-    function encodedToNum(encoded) {
-        encoded = encoded.split('')
-            .map(x => x === '.' ? x = '10' : x === '-' ? x = '11' : x = '**********').join('');
-        let encodedArr = encoded.split('');
-
-        for (let i = 0; i < (10 - encoded.length); i++) {
-            encodedArr.unshift('0');
-        }
-        return encodedArr.join('');
-    }
-
-    exprArr = exprArr.map(encoded => encodedToNum(encoded)).join('');
-    return exprArr;
+    arr = arr.map(x => x == '' ? x = ' ' : x = MORSE_TABLE[x]).reverse().join('');
+    return arr;
 }
 
 
